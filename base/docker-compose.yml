@@ -40,10 +40,6 @@ services:
         build: ./nextcloud
         restart: always
         environment:
-            - POSTGRES_DB=postgres
-            - POSTGRES_USER=nextcloud
-            - POSTGRES_PASSWORD="${NEXTCLOUD_DB_PASSWORD}"
-            - POSTGRES_HOST=pgsql:5432
         volumes:
             - nextcloud_html:/var/www/html
         networks:
