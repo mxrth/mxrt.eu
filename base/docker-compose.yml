@@ -2,29 +2,30 @@
 version: '3.5'
 
 volumes:
-    - portainer_data
+    portainer_data:
 
-caddy:
-    build: ./caddy
-    restart: always
-    ports: 
-        -80:80
-        -443:443
-    networks:
-        - edge
-        - service
+services:
+    caddy:
+        build: ./caddy
+        restart: always
+        ports: 
+            - 80:80
+            - 443:443
+        networks:
+            - edge
+            - service
 
 
-portainer:
-    build: ./portainer
-    restart: always
-    enviroment:
-        - VIRTUAL_HOST=docker.mxrt.de
-    networks:
-        -service
-    volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-        - portainer_data:/data 
+    portainer:
+        build: ./portainer
+        restart: always
+        environment:
+            - VIRTUAL_HOST=docker.mxrt.de
+        networks:
+            - service
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - portainer_data:/data 
 
         # pgsql:
 #     build: ./pgsql

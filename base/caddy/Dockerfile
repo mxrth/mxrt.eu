@@ -1,13 +1,18 @@
-FROM golang:1.13 AS build
+FROM golang:1.13
 
+
+ENV GO111MODULE=on
+
+WORKDIR /go/src/caddy
 #TODO: run caddy in a smaller container
 
-RUN go get github.com/caddyserver/caddy/v2
+COPY ./main.go .
+RUN go mod init caddy
+RUN go get github.com/caddyserver/caddy/v2@v2.0.0-beta.14
+RUN go build
 
-WORKDIR /caddy
+COPY ./Caddyfile .
 
-COPY ./caddyfile .
-
-RUN ["caddy", "run"]
+RUN ["/go/src/caddy/caddy", "run"]
 
 
