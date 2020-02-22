@@ -1,0 +1,3 @@
+CREATE USER nextcloud IF NOT EXISTS;
+CREATE DATABASE nextcloud WITH OWNER=nextcloud;
+GRANT ALL PRIVILEGES ON DATABASE nextcloud TO nextcloud;
