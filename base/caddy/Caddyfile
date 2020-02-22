@@ -2,9 +2,9 @@ mxrt.de { #currently blog is hosted on github pages
     redir https://blog.mxrt.de
 }
 
-#cloud.mxrt.de {
-#    reverse_proxy nextcloud:8080
-#}
+cloud.mxrt.de {
+    reverse_proxy nextcloud:80
+}
 
 docker.mxrt.de {
     reverse_proxy portainer:9000

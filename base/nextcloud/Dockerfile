@@ -1,1 +1,1 @@
-FROM nextcloud
+FROM nextcloud:apache
