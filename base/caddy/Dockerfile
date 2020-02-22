@@ -13,6 +13,6 @@ RUN go build
 
 COPY ./Caddyfile .
 
-RUN ["/go/src/caddy/caddy", "run"]
+CMD ["/go/src/caddy/caddy", "run"]
 
 
