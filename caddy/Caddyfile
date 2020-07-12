@@ -9,7 +9,7 @@ www.mxrt.de {
 }
 
 blog.mxrt.de {
-    root /home/max/blog/
+    root * /home/max/blog/
     file_server
 }
 
