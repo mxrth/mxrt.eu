@@ -1,0 +1,9 @@
+{
+    "admin": {
+        "disabled": false,
+        "listen": "unix//run/caddy/api.sock",
+        "origins": [
+            "localhost"
+        ]
+    }
+}

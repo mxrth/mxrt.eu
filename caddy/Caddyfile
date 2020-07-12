@@ -1,0 +1,7 @@
+mxrt.de {
+    redir https://blog.mxrt.de
+}
+
+www.mxrt.de {
+    redir https://blog.mxrt.de
+}
