@@ -1,5 +1,5 @@
 mxrt.de {
-    redir https://blog.mxrt.de
+    redir / https://blog.mxrt.de
     root /drafts/54fa6d988d11059f235a92d501a27e2c/* /home/max/blog_drafts
     file_server /drafts/54fa6d988d11059f235a92d501a27e2c/*
 }
