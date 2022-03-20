@@ -31,13 +31,18 @@ Is in groups `admin, docker`
 
 ### sshd
 
+initial setup with yubikey: 
+
+```
+ssh-keygen -t ecdsa-sk
+ssh-copy-id -i ~/.ssh/id_ecdsa_sk user@mxrt.de #adjust if different keyfile should be used
+```
+
 - Logins are only allowed by public key. 
 - Logins as `root` are forbidden.
 - Listens on the standard port `22`.
-- authorized keys for `admin` are owned by `admin`. Should be exactly three.
+- authorized keys for `admin` are owned by `admin`.
 - authorized keys for `max` are owned by `max` himself
-- fail2ban is configured in the debian default
-
 
 
 
