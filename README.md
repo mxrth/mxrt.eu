@@ -52,6 +52,7 @@ ssh-copy-id -i ~/.ssh/id_ecdsa_sk user@mxrt.de #adjust if different keyfile shou
 
 ## Podman
 
+* log in as admin and run `sudo machinectl login` to change to user `pods`
 
 
 ### Backup
