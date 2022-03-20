@@ -44,14 +44,10 @@ Is in groups `admin, docker`
 
 ### Wireguard
 
-### Docker Deamon
+
+## Podman
 
 
-
-## Docker
-
-
-### PostgreSQL
 
 ### Backup
 
@@ -94,7 +90,7 @@ some replacement for blogtrottr
 
 ## Admin Applications (only via VPN)
 
-### caddy_admin
+### caddy_vpn
 
 ### pgadmin
 
