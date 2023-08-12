@@ -1,0 +1,35 @@
+# adapted from https://github.com/atmoz/sftp/blob/master/Dockerfile
+FROM debian:bookworm
+
+#make sure to not bake in keys
+#keys are generated in entrypoint
+RUN apt-get update && \
+    apt-get -y install \
+        debootstrap \
+        openssh-server \
+    && rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /var/run/sshd && \
+    rm -f /etc/ssh/ssh_host_*key*
+
+RUN useradd scanner && \
+    usermod -p "$6$R0DAd5VSj4CywnIE$A8YIsgfpKlMmR275ZEcjg6JNbxJhxhcCDmkbumkuuy1c.j0jEN5DJibKet1IQP87c2h7uAdz5Yjon9MX/DP6y/" scanner && \
+    mkdir -p "/home/scanner" && \
+    chown root:root "/home/scanner" && \
+    chmod 755 "/home/scanner" && \
+    mkdir /home/scanner/upload && \
+    chown -R scanner /home/scanner/upload
+
+COPY scanner/authorized_keys /home/scanner/.ssh/authorized_keys
+RUN chown scanner /home/scanner/.ssh/authorized_keys
+RUN chmod 600 /home/scanner/.ssh/authorized_keys
+
+VOLUME [ "/home/scanner/upload" ]
+VOLUME [ "/keys" ]
+
+COPY sshd_config /etc/ssh/sshd_config
+
+COPY entrypoint /entrypoint
+
+EXPOSE 22
+
+ENTRYPOINT ["/entrypoint"]

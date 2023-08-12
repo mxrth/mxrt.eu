@@ -1,0 +1,15 @@
+[Unit]
+Description=SFTP container
+
+[Container]
+Image=localhost/sftp
+
+Volume=sftp_scanner.volume:/home/scanner/upload
+Volume=sftp_keys.volume:/keys
+PublishPort=2222:22
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

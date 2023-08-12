@@ -1,0 +1,28 @@
+---
+- name: init mxrt.de on hetzner
+  hosts: mxrt.de
+  become: true
+
+# TODO: Switch to official repository for podman, as soon as we can use quadlet (included in >=4.4)
+
+  tasks:
+    - name: remove native podman
+      ansible.builtin.apt:
+        name: podman
+        state: absent
+
+    - name: download kubic repo key
+      ansible.builtin.get_url:
+        url: https://download.opensuse.org/repositories/devel:kubic:libcontainers:unstable/Debian_Testing/Release.key
+        dest: /etc/apt/keyrings/kubic.asc
+        checksum: sha256:01ab26439324cb058f4214370535297989b28f743efcfa2b93bb780f2e2aa22d
+
+    - name: add kubic repo
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/kubic.asc] https://download.opensuse.org/repositories/devel:kubic:libcontainers:unstable/Debian_Testing/ /"
+
+    - name: install podman
+      ansible.builtin.apt:
+        name: podman
+        state: present
+        update_cache: true
