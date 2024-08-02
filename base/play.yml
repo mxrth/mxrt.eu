@@ -25,5 +25,3 @@
       ansible.builtin.hostname:
         name: mxrt.de
         use: debian
-
-    

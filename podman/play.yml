@@ -1,0 +1,17 @@
+---
+- name: setup podman
+  hosts: all
+  become: true
+
+# TODO: Switch to official repository for podman, as soon as we can use quadlet (included in >=4.4)
+
+  tasks:
+    - name: remove native podman
+      ansible.builtin.apt:
+        name: podman
+        state: absent
+
+    - name: install podman
+      ansible.builtin.include_role:
+        name: alvistack.podman
+

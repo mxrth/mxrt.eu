@@ -1,0 +1,13 @@
+# private network (http only)
+
+http://p.mxrt.de {
+    @denied not remote_ip 10.0.0.1/24
+    abort @denied
+    respond "Hello from Wireguard!"
+}
+
+# public, with ssl
+
+mxrt.de {
+    respond "Hello World"
+}

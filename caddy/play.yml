@@ -7,27 +7,23 @@
 
     - name: create containers dir
       ansible.builtin.file:
-        name: /containers
+        name: /containers/caddy
         state: directory
         mode: u=rwx,g=rx,o=rx
 
     - name: copy builddir
       ansible.builtin.copy:
-        src: containers/sftp/
-        dest: /containers/sftp/
+        src: container/
+        dest: /containers/caddy/
         directory_mode: u=xrw,g=xr,o=xr
         mode: u=rw,g=r,o=r
 
-    - name: make entrypoint executable
-      ansible.builtin.file:
-        path: /containers/sftp/entrypoint
-        mode: u=rwx,g=rx,o=rx
 
-    - name: build sftp container
+    - name: build caddy container
       containers.podman.podman_image:
-        name: sftp
+        name: caddy
         force: true
-        path: /containers/sftp
+        path: /containers/caddy
 
     - name: make sure /etc/containers/systemd/ exists
       ansible.builtin.file:
@@ -40,19 +36,33 @@
         src: "services/{{ item }}"
         dest: "/etc/containers/systemd/{{ item }}"
         mode: u=rw,g=r,o=r
+        force: true
       loop:
-        - sftp.container
-        - sftp_scanner.volume
-        - sftp_keys.volume
+        - caddy.container
+        - caddy_config.volume
+        - caddy_data.volume
 
-    - name: open port 2222
+    - name: open port 80
       ansible.posix.firewalld:
-        port: 2222/tcp
+        port: 80/tcp
         permanent: true
         state: enabled
+
+    - name: open port 443
+      ansible.posix.firewalld:
+        port: 443/tcp
+        permanent: true
+        state: enabled
+
+    - name: open port 80 for wireguard
+      ansible.posix.firewalld:
+        port: 80/tcp
+        permanent: true
+        state: enabled
+        interface: wg0
 
     - name: start services
       ansible.builtin.systemd_service:
         daemon_reload: true
-        name: sftp.service
+        name: caddy.service
         state: restarted

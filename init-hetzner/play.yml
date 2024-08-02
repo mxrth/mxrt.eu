@@ -1,6 +1,7 @@
 ---
 - name: init mxrt.de on hetzner
   hosts: all
+  become: false
 
 
   tasks:
