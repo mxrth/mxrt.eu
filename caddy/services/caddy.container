@@ -5,9 +5,10 @@ Description=Caddy Server
 Image=localhost/caddy
 
 Volume=caddy_data.volume:/data
-Volume=caddy_config:/config
+Volume=caddy_config.volume:/config
 PublishPort=80:80
 PublishPort=443:443
+Network=host
 
 [Service]
 Restart=always

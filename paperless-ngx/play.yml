@@ -1,0 +1,45 @@
+---
+- name: setup caddy
+  hosts: all
+  become: true
+  vars_files:
+    admin_password.yml
+
+  tasks:
+
+    - name: make sure /etc/containers/systemd/ exists
+      ansible.builtin.file:
+        path: /etc/containers/systemd/
+        state: directory
+        mode: u=rwx,g=rx,o=rx
+
+
+    - name: copy env file
+      ansible.builtin.template:
+        src: services/paperless.env.j2
+        dest: /etc/containers/systemd/paperless.env
+
+
+    - name: copy quadlet files
+      ansible.builtin.copy:
+        src: "services/{{ item }}"
+        dest: "/etc/containers/systemd/{{ item }}"
+        mode: u=rw,g=r,o=r
+        force: true
+      loop:
+        - paperless-data.volume
+        - paperless-gotenberg.container
+        - paperless-media.volume
+        - paperless-redis.container
+        - paperless-redisdata.volume
+        - paperless-tika.container
+        - paperless.container
+        - paperless-net.network
+
+
+    - name: start services
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+        name: paperless.service
+        state: restarted
+        enabled: true

@@ -1,0 +1,14 @@
+[Unit]
+Description=Gotenberg for paperless
+WantedBy=paperless.service
+PartOf=paperless.service
+
+
+[Container]
+Image=docker.io/gotenberg/gotenberg:8.7
+
+Exec="gotenberg --chromium-disable-javascript=true --chromium-allow-list=file:///tmp/.*"
+Network=paperless-net.network
+
+[Service]
+Restart=always

@@ -1,0 +1,15 @@
+[Unit]
+Description=Redis for paperless
+WantedBy=paperless.service
+PartOf=paperless.service
+
+
+[Container]
+Image=docker.io/library/redis:7
+
+Volume=paperless-redisdata.volume:/data
+Network=paperless-net.network
+
+
+[Service]
+Restart=always

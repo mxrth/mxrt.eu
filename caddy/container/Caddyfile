@@ -6,7 +6,11 @@ http://p.mxrt.de {
     respond "Hello from Wireguard!"
 }
 
-# public, with ssl
+http://paperless.p.mxrt.de {
+    reverse_proxy localhost:8000
+}
+
+# public, with automatic ssl
 
 mxrt.de {
     respond "Hello World"
