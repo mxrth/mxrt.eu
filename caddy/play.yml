@@ -1,5 +1,5 @@
 ---
-- name: setup sftp on port 2222 for scanning
+- name: setup caddy
   hosts: all
   become: true
 
@@ -54,15 +54,16 @@
         permanent: true
         state: enabled
 
-    - name: open port 80 for wireguard
-      ansible.posix.firewalld:
-        port: 80/tcp
-        permanent: true
-        state: enabled
-        interface: wg0
+    # - name: open port 80 for wireguard
+    #   ansible.posix.firewalld:
+    #     port: 80/tcp
+    #     permanent: true
+    #     state: enabled
+    #     interface: wg0
 
     - name: start services
       ansible.builtin.systemd_service:
         daemon_reload: true
         name: caddy.service
         state: restarted
+        enabled: true
