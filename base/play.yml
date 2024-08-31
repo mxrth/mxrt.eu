@@ -1,17 +1,17 @@
 ---
-- name: base system setup
+- name: Base system setup
   hosts: all
   become: true
 
   tasks:
 
-    - name: copy sources.list
+    - name: Copy sources.list
       ansible.builtin.template:
         src: etc/apt/sources.list.j2
         dest: /etc/apt/sources.list
-        mode: 0644
+        mode: "0644"
 
-    - name: install vim, firewalld, zstd
+    - name: Install vim, firewalld, zstd
       ansible.builtin.apt:
         update_cache: true
         name: "{{ item }}"
@@ -21,7 +21,12 @@
         - firewalld
         - zstd
 
-    - name: set hostname
+    - name: Set hostname
       ansible.builtin.hostname:
         name: mxrt.de
         use: debian
+
+    - name: Set shell for admin to bash
+      ansible.builtin.user:
+        name: admin
+        shell: /usr/bin/bash
