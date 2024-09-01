@@ -1,12 +1,16 @@
 # private network (http only)
 
 http://p.mxrt.de {
+    bind 10.0.0.1
     @denied not remote_ip 10.0.0.1/24
     abort @denied
     respond "Hello from Wireguard!"
 }
 
 http://paperless.p.mxrt.de {
+    bind 10.0.0.1
+    @denied not remote_ip 10.0.0.1/24
+    abort @denied
     reverse_proxy localhost:8000
 }
 

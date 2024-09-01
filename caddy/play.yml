@@ -1,17 +1,17 @@
 ---
-- name: setup caddy
+- name: Setup caddy
   hosts: all
   become: true
 
   tasks:
 
-    - name: create containers dir
+    - name: Create containers dir
       ansible.builtin.file:
         name: /containers/caddy
         state: directory
         mode: u=rwx,g=rx,o=rx
 
-    - name: copy builddir
+    - name: Copy builddir
       ansible.builtin.copy:
         src: container/
         dest: /containers/caddy/
@@ -19,19 +19,19 @@
         mode: u=rw,g=r,o=r
 
 
-    - name: build caddy container
+    - name: Build caddy container
       containers.podman.podman_image:
         name: caddy
         force: true
         path: /containers/caddy
 
-    - name: make sure /etc/containers/systemd/ exists
+    - name: Make sure /etc/containers/systemd/ exists
       ansible.builtin.file:
         path: /etc/containers/systemd/
         state: directory
         mode: u=rwx,g=rx,o=rx
 
-    - name: copy quadlet files
+    - name: Copy quadlet files
       ansible.builtin.copy:
         src: "services/{{ item }}"
         dest: "/etc/containers/systemd/{{ item }}"
@@ -42,13 +42,13 @@
         - caddy_config.volume
         - caddy_data.volume
 
-    - name: open port 80
+    - name: Open port 80
       ansible.posix.firewalld:
         port: 80/tcp
         permanent: true
         state: enabled
 
-    - name: open port 443
+    - name: Open port 443
       ansible.posix.firewalld:
         port: 443/tcp
         permanent: true
@@ -61,7 +61,7 @@
     #     state: enabled
     #     interface: wg0
 
-    - name: start services
+    - name: Start services
       ansible.builtin.systemd_service:
         daemon_reload: true
         name: caddy.service
