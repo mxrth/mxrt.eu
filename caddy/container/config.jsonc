@@ -1,0 +1,147 @@
+{
+	"admin": {
+		"disabled": true
+	},
+
+	"apps": {
+		"http": {
+			"servers": {
+				"wireguard": {
+					"listen": [
+						"p.mxrt.eu:80"
+					],
+					"routes": [
+						{
+							"match": [
+								{
+									"host": [
+										"paperless.p.mxrt.eu"
+									]
+								}
+							],
+							"handle": [
+								{
+									"handler": "subroute",
+									"routes": [
+										{
+											"handle": [
+												{
+													"abort": true,
+													"handler": "static_response"
+												}
+											],
+											"match": [
+												{
+													"not": [
+														{
+															"remote_ip": {
+																"ranges": [
+																	"10.0.0.1/24"
+																]
+															}
+														}
+													]
+												}
+											]
+										},
+										{
+											"handle": [
+												{
+													"handler": "reverse_proxy",
+													"upstreams": [
+														{
+															"dial": "localhost:8000"
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							],
+							"terminal": true
+						},
+						{
+							"match": [
+								{
+									"host": [
+										"p.mxrt.eu"
+									]
+								}
+							],
+							"handle": [
+								{
+									"handler": "subroute",
+									"routes": [
+										{
+											"handle": [
+												{
+													"abort": true,
+													"handler": "static_response"
+												}
+											],
+											"match": [
+												{
+													"not": [
+														{
+															"remote_ip": {
+																"ranges": [
+																	"10.0.0.1/24"
+																]
+															}
+														}
+													]
+												}
+											]
+										},
+										{
+											"handle": [
+												{
+													"body": "Hello from Wireguard!",
+													"handler": "static_response"
+												}
+											]
+										}
+									]
+								}
+							],
+							"terminal": true
+						}
+					]
+				},
+				"public": {
+					"listen": [
+						"mxrt.eu:443"
+					],
+					"routes": [
+						{
+							"match": [
+								{
+									"host": [
+										"mxrt.eu"
+									]
+								}
+							],
+							"handle": [
+								{
+									"handler": "subroute",
+									"routes": [
+										{
+											"handle": [
+												{
+													"body": "Hello World",
+													"handler": "static_response"
+												}
+											]
+										}
+									]
+								}
+							],
+							"terminal": true
+						}
+					]
+				}
+			}
+		}
+	}
+}
