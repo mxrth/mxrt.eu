@@ -1,5 +1,5 @@
 ---
-- name: init mxrt.de on hetzner
+- name: init mxrt.eu on hetzner
   hosts: all
   become: false
 
