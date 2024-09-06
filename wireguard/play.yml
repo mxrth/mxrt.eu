@@ -39,6 +39,31 @@
         permanent: true
         state: enabled
 
+    - name: add wg0 to internal zone
+      ansible.posix.firewalld:
+        zone: internal
+        interface: wg0
+        state: enabled
+        permanent: true
+
+    - name: add 10.0.0.1/24 to as source to internal zone
+      ansible.posix.firewalld:
+        zone: internal
+        source: 10.0.0.1/24
+        state: enabled
+        permanent: true
+
+    - name: accept internal
+      ansible.posix.firewalld:
+        zone: internal
+        state: present
+        permanent: true
+        target: ACCEPT
+    
+    - name: restart firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: restarted
 
     - name: Start and enable Wireguard service
       ansible.builtin.service:
