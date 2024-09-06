@@ -1,5 +1,5 @@
 ---
-- name: init mxrt.eu on hetzner
+- name: Init mxrt.eu on hetzner
   hosts: all
   become: false
 
@@ -7,31 +7,31 @@
   tasks:
     # new user "admin" with sudo privilgeges and ssh access
     # private key is stored on yubikey
-    - name: create user admin
+    - name: Create user admin
       ansible.builtin.user:
         name: admin
         create_home: true
         password: $y$j9T$MYYbe7FpQh3NnWdYr/dls.$VQ6Oiyk0s2HRbQjRdSopSHFrVqSZM/.cOZElgkBKdUD
 
-    - name: create .ssh with correct permissions
+    - name: Create .ssh with correct permissions
       ansible.builtin.file:
         path: /home/admin/.ssh
         state: directory
         owner: admin
         mode: '0700'
 
-    - name: copy public key
+    - name: Copy public key
       ansible.posix.authorized_key:
         user: admin
         state: present
         key: "{{ lookup('file', 'public_keys/ykpc_id_ecdsa_sk.pub') }}"
 
-    - name: install sudo
+    - name: Install sudo
       ansible.builtin.apt:
         name: sudo
         state: present
 
-    - name: allow admin to elevate privileges via sudo
+    - name: Allow admin to elevate privileges via sudo
       community.general.sudoers:
         name: allow-all-admin
         state: present
@@ -40,7 +40,7 @@
         commands: ALL
         validation: required
 
-    - name: disallow root to login via ssh
+    - name: Disallow root to login via ssh
       ansible.builtin.copy:
         src: etc/ssh/sshd_config
         dest: /etc/ssh/sshd_config
