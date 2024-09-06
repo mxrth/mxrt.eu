@@ -22,20 +22,41 @@
 
     - name: copy quadlet files
       ansible.builtin.copy:
-        src: "services/{{ item }}"
-        dest: "/etc/containers/systemd/{{ item }}"
+        src: "{{ item }}"
+        dest: "/etc/containers/systemd/"
         mode: u=rw,g=r,o=r
         force: true
-      loop:
-        - paperless-data.volume
-        - paperless-gotenberg.container
-        - paperless-media.volume
-        - paperless-redis.container
-        - paperless-redisdata.volume
-        - paperless-tika.container
-        - paperless.container
-        - paperless-net.network
+      with_fileglob:
+        - "services/*"
 
+    - name: copy container files
+      ansible.builtin.copy:
+          src: "{{ item }}"
+          dest: "/containers/nfs/"
+          mode: u=rw,g=r,o=r
+          force: true
+      with_fileglob:
+        - "containers/nfs/*"
+
+    - name: build nfs container
+      containers.podman.podman_image:
+        name: paperless-nfs
+        force: true
+        path: /containers/nfs
+
+    - name: open port 2049 for nfs
+      ansible.posix.firewalld:
+        zone: internal
+        port: 2049/tcp
+        permanent: true
+        state: enabled
+
+    - name: open port 20048 for nfs
+      ansible.posix.firewalld:
+        zone: internal
+        port: 20048/tcp
+        permanent: true
+        state: enabled
 
     - name: start services
       ansible.builtin.systemd_service:
