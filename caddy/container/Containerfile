@@ -1,3 +1,12 @@
+FROM caddy:2.8.4-builder AS builder
+
+RUN xcaddy build \
+    --with github.com/caddyserver/jsonc-adapter
+
 FROM caddy:2.8.4-alpine
 
-COPY Caddyfile /etc/caddy/Caddyfile
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+
+COPY config.jsonc /etc/caddy/config.jsonc
+
+CMD ["caddy", "run", "--config", "/etc/caddy/config.jsonc", "--adapter", "jsonc"]
