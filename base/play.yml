@@ -23,7 +23,7 @@
 
     - name: Set hostname
       ansible.builtin.hostname:
-        name: mxrt.de
+        name: mxrt.eu
         use: debian
 
     - name: Set shell for admin to bash
