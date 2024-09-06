@@ -1,6 +1,6 @@
-# The Server Behind mxrt.eu
+# The Server Behind mxrt.de
 
-This repository contains documentation for my private server at mxrt.eu.
+This repository contains documentation for my private server at mxrt.de.
 
 
 ## Network
@@ -26,6 +26,10 @@ TODO: show this as part of `admx status net`
 
 ### SSH
 
-This repository contains documentation for my private server at mxrt.de.
+### Wireguard
 
+### Caddy
 
+## Services
+
+### paperless-ngx
