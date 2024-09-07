@@ -1,3 +1,3 @@
-module mxrt.de/admx
+module mxrt.eu/admx
 
 go 1.23
