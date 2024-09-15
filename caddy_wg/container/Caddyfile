@@ -1,0 +1,12 @@
+{
+    admin off
+    auto_https off
+}
+
+http://p.mxrt.eu {
+    respond "Hello from wg"
+}
+
+http://paperless.p.mxrt.eu {
+    reverse_proxy localhost:8000
+}

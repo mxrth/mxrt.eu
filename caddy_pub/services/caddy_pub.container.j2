@@ -2,13 +2,12 @@
 Description=Caddy Server
 
 [Container]
-Image=localhost/caddy
+Image=localhost/caddy-pub
 
 Volume=caddy_data.volume:/data
 Volume=caddy_config.volume:/config
-PublishPort=80:80
-PublishPort=443:443
-Network=host
+PublishPort={{public_ipv4}}:80:80
+PublishPort={{public_ipv4}}:443:443
 
 [Service]
 Restart=always

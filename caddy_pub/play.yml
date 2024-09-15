@@ -2,28 +2,40 @@
 - name: Setup caddy
   hosts: all
   become: true
+  vars_files: ../vars.yml
 
   tasks:
 
     - name: Create containers dir
       ansible.builtin.file:
-        name: /containers/caddy
+        name: /containers/caddy_pub
         state: directory
         mode: u=rwx,g=rx,o=rx
+ 
+    - name: Adapt Caddyfile to config.json
+      delegate_to: localhost
+      become: false 
+      ansible.builtin.shell: podman run -v ./container/:/etc/caddy/ -i docker.io/caddy:{{caddy_version}}-alpine caddy adapt -p --config /etc/caddy/Caddyfile > ./container/config.json
 
-    - name: Copy builddir
+
+    - name: Copy config.json
       ansible.builtin.copy:
-        src: container/
-        dest: /containers/caddy/
-        directory_mode: u=xrw,g=xr,o=xr
+        src: container/config.json
+        dest: /containers/caddy_pub/config.json
+        mode: u=rw,g=r,o=r
+
+    - name: Copy Containerfile
+      ansible.builtin.template:
+        src: container/Containerfile.j2
+        dest: /containers/caddy_pub/Containerfile
         mode: u=rw,g=r,o=r
 
 
     - name: Build caddy container
       containers.podman.podman_image:
-        name: caddy
+        name: caddy_pub
         force: true
-        path: /containers/caddy
+        path: /containers/caddy_pub
 
     - name: Make sure /etc/containers/systemd/ exists
       ansible.builtin.file:
@@ -38,9 +50,15 @@
         mode: u=rw,g=r,o=r
         force: true
       loop:
-        - caddy.container
         - caddy_config.volume
         - caddy_data.volume
+
+    - name: Copy caddy.container.j2
+      ansible.builtin.template:
+        src: services/caddy_pub.container.j2
+        dest: /etc/containers/systemd/caddy_pub.container
+        mode: u=rw,g=r,o=r
+        force: true
 
     - name: Open port 80
       ansible.posix.firewalld:
@@ -64,6 +82,6 @@
     - name: Start services
       ansible.builtin.systemd_service:
         daemon_reload: true
-        name: caddy.service
+        name: caddy_pub.service
         state: restarted
         enabled: true

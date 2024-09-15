@@ -1,0 +1,66 @@
+{
+	"admin": {
+		"disabled": true
+	},
+	"apps": {
+		"http": {
+			"servers": {
+				"srv0": {
+					"listen": [
+						":443"
+					],
+					"routes": [
+						{
+							"match": [
+								{
+									"host": [
+										"mxrt.eu"
+									]
+								}
+							],
+							"handle": [
+								{
+									"handler": "subroute",
+									"routes": [
+										{
+											"handle": [
+												{
+													"body": "Hello World!",
+													"handler": "static_response"
+												}
+											]
+										}
+									]
+								}
+							],
+							"terminal": true
+						}
+					]
+				},
+				"srv1": {
+					"listen": [
+						":80"
+					]
+				}
+			}
+		},
+		"tls": {
+			"automation": {
+				"policies": [
+					{
+						"subjects": [
+							"mxrt.eu"
+						],
+						"issuers": [
+							{
+								"ca": "https://acme-v02.api.letsencrypt.org/directory",
+								"email": "certs@mxrt.eu",
+								"module": "acme"
+							}
+						]
+					}
+				]
+			}
+		}
+	}
+}

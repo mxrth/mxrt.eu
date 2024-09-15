@@ -1,0 +1,7 @@
+FROM caddy:{{caddy_version}}-alpine
+
+
+COPY config.json /etc/caddy/config.json
+
+CMD ["caddy", "run", "--config", "/etc/caddy/config.json"]
+

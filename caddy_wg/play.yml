@@ -1,0 +1,68 @@
+---
+- name: Setup caddy
+  hosts: all
+  become: true
+  vars_files: ../vars.yml
+
+  tasks:
+
+    - name: Create containers dir
+      ansible.builtin.file:
+        name: /containers/caddy_wg
+        state: directory
+        mode: u=rwx,g=rx,o=rx
+ 
+    - name: Adapt Caddyfile to config.json
+      delegate_to: localhost
+      become: false 
+      ansible.builtin.shell: podman run -v ./container/:/etc/caddy/ -i docker.io/caddy:{{caddy_version}}-alpine caddy adapt -p --config /etc/caddy/Caddyfile > ./container/config.json
+
+
+    - name: Copy config.json
+      ansible.builtin.copy:
+        src: container/config.json
+        dest: /containers/caddy_wg/config.json
+        mode: u=rw,g=r,o=r
+
+    - name: Copy Containerfile
+      ansible.builtin.template:
+        src: container/Containerfile.j2
+        dest: /containers/caddy_wg/Containerfile
+        mode: u=rw,g=r,o=r
+
+
+    - name: Build caddy container
+      containers.podman.podman_image:
+        name: caddy_wg
+        force: true
+        path: /containers/caddy_wg
+
+    - name: Make sure /etc/containers/systemd/ exists
+      ansible.builtin.file:
+        path: /etc/containers/systemd/
+        state: directory
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Copy quadlet files
+      ansible.builtin.copy:
+        src: "services/{{ item }}"
+        dest: "/etc/containers/systemd/{{ item }}"
+        mode: u=rw,g=r,o=r
+        force: true
+      loop:
+        - caddy_wg_config.volume
+        - caddy_wg_data.volume
+
+    - name: Copy caddy.container.j2
+      ansible.builtin.template:
+        src: services/caddy_wg.container.j2
+        dest: /etc/containers/systemd/caddy_wg.container
+        mode: u=rw,g=r,o=r
+        force: true
+
+    - name: Start services
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+        name: caddy_wg.service
+        state: restarted
+        enabled: true

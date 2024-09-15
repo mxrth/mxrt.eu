@@ -1,0 +1,16 @@
+[Unit]
+Description=Caddy Server
+
+[Container]
+Image=localhost/caddy_wg
+
+Volume=caddy_wg_data.volume:/data
+Volume=caddy_wg_config.volume:/config
+PublishPort={{wg_ipv4}}:80:80
+PublishPort={{wg_ipv4}}:443:443
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

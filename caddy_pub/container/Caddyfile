@@ -1,0 +1,16 @@
+{
+    admin off
+    email certs@mxrt.eu
+    acme_ca https://acme-v02.api.letsencrypt.org/directory
+}
+
+
+mxrt.eu {
+    respond "Hello World!"
+}
+
+# Make sure that Automatic HTTPS only binds to mxrt.eu, see https://caddyserver.com/docs/caddyfile/options#default-bind
+http:// {
+
+}
+
