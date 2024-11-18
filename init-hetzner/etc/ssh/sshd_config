@@ -39,7 +39,7 @@ PermitRootLogin no
 #PubkeyAuthentication yes
 
 # Expect .ssh/authorized_keys2 to be disregarded by default in future.
-#AuthorizedKeysFile	.ssh/authorized_keys .ssh/authorized_keys2
+AuthorizedKeysFile	.ssh/authorized_keys
 
 #AuthorizedPrincipalsFile none
 
@@ -113,7 +113,7 @@ PrintMotd no
 AcceptEnv LANG LC_*
 
 # override default of no subsystems
-Subsystem	sftp	/usr/lib/openssh/sftp-server
+Subsystem	sftp	/usr/libexec/openssh/sftp-server
 
 # Example of overriding settings on a per-user basis
 #Match User anoncvs

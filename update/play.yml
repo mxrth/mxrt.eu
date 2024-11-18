@@ -1,28 +1,27 @@
 ---
-- name: update all packages
+- name: Update all packages
   hosts: all
   become: true
 
   tasks:
-    - name: update apt cache
-      apt:
-        update_cache: true
-        force_apt_get: true
-    - name: upgrade all apt packages
-      apt:
-        upgrade: dist
-        force_apt_get: true
+    - name: Upgrade all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_only: true
 
-    - name: Check if a reboot is needed
-      register: reboot_required_file
-      stat: path=/var/run/reboot-required get_md5=no
+    - name: Check if a reboot is required
+      ansible.builtin.command: needs-restarting -r
+      register: reg_reboot_required
+      ignore_errors: true
+      failed_when: false
+      changed_when: reg_reboot_required.rc != 0
+      notify:
+        - Reboot server
 
-    - name: Reboot if required
-      reboot:
-        msg: "Reboot initiated by Ansible after update"
-        connect_timeout: 5
-        reboot_timeout: 90
-        pre_reboot_delay: 0
-        post_reboot_delay: 30
+  handlers:
+    - name: Reboot server
+      ansible.builtin.reboot:
+        msg: "Reboot initiated by Ansible after OS update"
+        reboot_timeout: 3600
         test_command: uptime
-      when: reboot_required_file.stat.exists

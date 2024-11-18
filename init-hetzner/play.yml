@@ -1,4 +1,5 @@
 ---
+# run with -u root -k -e 'ansible_user=root' and install `sshpass` (TODO: this should not be needed)
 - name: Init mxrt.eu on hetzner
   hosts: all
   become: false
@@ -27,7 +28,7 @@
         key: "{{ lookup('file', 'public_keys/ykpc_id_ecdsa_sk.pub') }}"
 
     - name: Install sudo
-      ansible.builtin.apt:
+      ansible.builtin.dnf:
         name: sudo
         state: present
 

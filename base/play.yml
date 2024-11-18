@@ -5,15 +5,8 @@
 
   tasks:
 
-    - name: Copy sources.list
-      ansible.builtin.template:
-        src: etc/apt/sources.list.j2
-        dest: /etc/apt/sources.list
-        mode: "0644"
-
     - name: Install vim, firewalld, zstd
-      ansible.builtin.apt:
-        update_cache: true
+      ansible.builtin.dnf:
         name: "{{ item }}"
         state: present
       loop:
@@ -24,7 +17,7 @@
     - name: Set hostname
       ansible.builtin.hostname:
         name: mxrt.eu
-        use: debian
+        use: redhat
 
     - name: Set shell for admin to bash
       ansible.builtin.user:
