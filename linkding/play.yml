@@ -1,0 +1,36 @@
+---
+- name: Setup linkding
+  hosts: all
+  become: true
+  vars_files: 
+    - ../vars.yml
+    - superuser_password.yml
+
+  tasks:
+
+    - name: Make sure /etc/containers/systemd/ exists
+      ansible.builtin.file:
+        path: /etc/containers/systemd/
+        state: directory
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Copy quadlet files
+      ansible.builtin.copy:
+        src: "services/linkding_data.volume"
+        dest: "/etc/containers/systemd/linkding_data.volume"
+        mode: u=rw,g=r,o=r
+        force: true
+
+    - name: linkding.container.j2
+      ansible.builtin.template:
+        src: services/linkding.container.j2
+        dest: /etc/containers/systemd/linkding.container
+        mode: u=rw,g=r,o=r
+        force: true
+
+    - name: Start services
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+        name: linkding.service
+        state: restarted
+        enabled: true

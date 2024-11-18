@@ -10,3 +10,7 @@ http://p.mxrt.eu {
 http://paperless.p.mxrt.eu {
     reverse_proxy localhost:8000
 }
+
+http://linkding.p.mxrt.eu {
+    reverse_proxy systemd-linkding:9090
+}

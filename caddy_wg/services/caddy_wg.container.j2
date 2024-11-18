@@ -8,6 +8,7 @@ Volume=caddy_wg_data.volume:/data
 Volume=caddy_wg_config.volume:/config
 PublishPort={{wg_ipv4}}:80:80
 PublishPort={{wg_ipv4}}:443:443
+Network=net_wg.network
 
 [Service]
 Restart=always

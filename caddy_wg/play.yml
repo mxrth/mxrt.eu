@@ -52,6 +52,7 @@
       loop:
         - caddy_wg_config.volume
         - caddy_wg_data.volume
+        - net_wg.network
 
     - name: Copy caddy.container.j2
       ansible.builtin.template:

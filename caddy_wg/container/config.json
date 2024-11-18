@@ -43,6 +43,35 @@
 							"match": [
 								{
 									"host": [
+										"linkding.p.mxrt.eu"
+									]
+								}
+							],
+							"handle": [
+								{
+									"handler": "subroute",
+									"routes": [
+										{
+											"handle": [
+												{
+													"handler": "reverse_proxy",
+													"upstreams": [
+														{
+															"dial": "systemd-linkding:9090"
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							],
+							"terminal": true
+						},
+						{
+							"match": [
+								{
+									"host": [
 										"p.mxrt.eu"
 									]
 								}
