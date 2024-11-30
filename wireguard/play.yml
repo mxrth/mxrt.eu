@@ -1,17 +1,16 @@
 ---
-- name: setup wireguard
+- name: Setup wireguard
   hosts: all
   become: true
   vars_files:
-    private_key.yml
+    private_key.yml   # Run with --ask-vault-pass
 
   tasks:
 
     - name: "Install wireguard packages"
-      ansible.builtin.apt:
-        name: "wireguard"
+      ansible.builtin.dnf:
+        name: "wireguard-tools"
         state: present
-        update_cache: true
 
     - name: "Enable wireguard kernel module"
       community.general.modprobe:
