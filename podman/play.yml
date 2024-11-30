@@ -1,0 +1,30 @@
+---
+- name: Set up podman
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: Install container-tools
+      ansible.builtin.dnf:
+        name: container-tools
+        state: present
+
+    - name: Create new user deploy for rootless containers
+      ansible.builtin.user:
+        name: deploy
+        create_home: true
+        state: present
+
+    - name: Create containers dir
+      ansible.builtin.file:
+        path: /home/deploy/.config/containers/systemd
+        state: directory
+        mode: '0755'
+        owner: deploy
+        group: deploy
+
+    - name: Enable lingering for deploy
+      ansible.builtin.command:
+        cmd: "loginctl enable-linger deploy"
+        creates: "/var/lib/systemd/linger/deploy"
