@@ -35,11 +35,13 @@
     - name: Allow admin to elevate privileges via sudo
       community.general.sudoers:
         name: allow-all-admin
-        state: present
+        state: present          # default
         user: admin
-        host: ALL
+        host: ALL               # default
         commands: ALL
-        validation: required
+        nopassword: true        # default
+        runas: ALL
+        validation: required    # validation with visudo
 
     - name: Disallow root to login via ssh
       ansible.builtin.copy:
