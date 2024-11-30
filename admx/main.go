@@ -11,7 +11,7 @@ func main() {
 }
 
 func listPackages() string {
-	out, err := Bash(`apt list --installed | sed "/installed,automatic/d"`).Output()
+	out, err := Bash(`sudo dnf repoquery --userinstalled`).Output()
 	if err != nil {
 		log.Fatal(err)
 	}
